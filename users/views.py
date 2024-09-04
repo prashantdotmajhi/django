@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 # Create your views here.
 def homepage(request): 
     return render(request,'homepage.html')
@@ -24,15 +24,15 @@ def singup(request):
 
     return render(request,'Sing_up.html')
 
-def login(request):
+def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
 
-        User = authenticate(username = username, password = password)
+        User = authenticate(request, username = username, password = password)
         if User is not None:
             login(request, User)
-            return render(request, 'homepage.html')
+            return redirect('homepage')
         else:
             return render(request, 'login.html',{'error': 'User or password is incorrect!!!'})
     return render(request,'login.html')
